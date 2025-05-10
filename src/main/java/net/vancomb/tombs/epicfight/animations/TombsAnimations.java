@@ -1,0 +1,126 @@
+package net.vancomb.tombs.epicfight.animations;
+
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.vancomb.tombs.Tombs;
+import net.vancomb.tombs.networking.NetworkManager;
+import net.vancomb.tombs.networking.ServerBoundReloadPacket;
+import net.vancomb.tombs.registry.TombsParticleTypes;
+import net.vancomb.tombs.registry.TombsSounds;
+import net.vancomb.tombs.world.capabilities.item.BulletsCapability;
+import yesman.epicfight.api.animation.AnimationManager.AnimationAccessor;
+import yesman.epicfight.api.animation.AnimationManager.AnimationBuilder;
+import yesman.epicfight.api.animation.AnimationManager.AnimationRegistryEvent;
+import yesman.epicfight.api.animation.Joint;
+import yesman.epicfight.api.animation.property.AnimationEvent;
+import yesman.epicfight.api.animation.property.AnimationEvent.Side;
+import yesman.epicfight.api.animation.property.AnimationEvent.SimpleEvent;
+import yesman.epicfight.api.animation.property.AnimationProperty.StaticAnimationProperty;
+import yesman.epicfight.api.animation.types.AimAnimation;
+import yesman.epicfight.api.animation.types.EntityState;
+import yesman.epicfight.api.animation.types.ReboundAnimation;
+import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.utils.math.MathUtils;
+import yesman.epicfight.api.utils.math.OpenMatrix4f;
+import yesman.epicfight.gameasset.Animations;
+import yesman.epicfight.gameasset.Armatures;
+
+@Mod.EventBusSubscriber(modid = Tombs.MODID, bus = Bus.MOD)
+public class TombsAnimations {
+	public static AnimationAccessor<AimAnimation> BIPED_LEFTHAND_AIM;
+	public static AnimationAccessor<AimAnimation> BIPED_RIGHTHAND_AIM;
+	public static AnimationAccessor<AimAnimation> BIPED_TWOHAND_AIM;
+	
+	public static AnimationAccessor<ReboundAnimation> BIPED_LEFTHAND_SHOT;
+	public static AnimationAccessor<ReboundAnimation> BIPED_RIGHTHAND_SHOT;
+	
+	public static AnimationAccessor<StaticAnimation> BIPED_RELOAD_LEFTHAND;
+	public static AnimationAccessor<StaticAnimation> BIPED_RELOAD_RIGHTHAND;
+	public static AnimationAccessor<StaticAnimation> BIPED_RELOAD_TWOHAND;
+	
+	// Add event subscriber that registers epic fight animations
+	@SubscribeEvent
+	public static void registerAnimations(AnimationRegistryEvent event) {
+		event.newBuilder(Tombs.MODID, TombsAnimations::build);
+	}
+	
+	// Build animations
+	public static void build(AnimationBuilder builder) {
+		
+		// The first parameter is path of animation file under assets/${modid}/animmodels/animations/
+		
+		// Define aim animation. Receives each registry name of animations when looking up, forward, down, and lying (when swim and flying)
+		BIPED_LEFTHAND_AIM = builder.nextAccessor("biped/lefthand_aim", (accessor) -> new AimAnimation(true, accessor, "biped/lefthand_aim_mid", "biped/lefthand_aim_up", "biped/lefthand_aim_down", "biped/lefthand_aim_lying", Armatures.BIPED));
+		BIPED_RIGHTHAND_AIM = builder.nextAccessor("biped/righthand_aim", (accessor) -> new AimAnimation(true, accessor, "biped/righthand_aim_mid", "biped/righthand_aim_up", "biped/righthand_aim_down", "biped/righthand_aim_lying", Armatures.BIPED));
+		BIPED_TWOHAND_AIM = builder.nextAccessor("biped/twohand_aim", (accessor) -> new AimAnimation(true, accessor, "biped/twohand_aim_mid", "biped/twohand_aim_up", "biped/twohand_aim_down", "biped/twohand_aim_lying", Armatures.BIPED));
+		
+		BIPED_LEFTHAND_SHOT = builder.nextAccessor("biped/lefthand_shot", (accessor) ->
+			new ReboundAnimation(0.05F, false, accessor, "biped/lefthand_shot_mid", "biped/lefthand_shot_up", "biped/lefthand_shot_down", "biped/lefthand_shot_lying", Armatures.BIPED)
+				.addEvents(StaticAnimationProperty.ON_BEGIN_EVENTS, SimpleEvent.create(ReusableSources.MUZZLE_FLASH, Side.CLIENT).params(Armatures.BIPED.get().toolL))
+		);
+		
+		BIPED_RIGHTHAND_SHOT = builder.nextAccessor("biped/righthand_shot", (accessor) ->
+			new ReboundAnimation(0.05F, false, accessor, "biped/righthand_shot_mid", "biped/righthand_shot_up", "biped/righthand_shot_down", "biped/righthand_shot_lying", Armatures.BIPED)
+				.addEvents(StaticAnimationProperty.ON_BEGIN_EVENTS, SimpleEvent.create(ReusableSources.MUZZLE_FLASH, Side.CLIENT).params(Armatures.BIPED.get().toolR))
+		);
+		
+		BIPED_RELOAD_LEFTHAND = builder.nextAccessor("biped/reload_lefthand", (accessor) ->
+			new StaticAnimation(false, accessor, Armatures.BIPED)
+				.addEvents(StaticAnimationProperty.ON_BEGIN_EVENTS, SimpleEvent.create(Animations.ReusableSources.PLAY_SOUND, Side.CLIENT).params(TombsSounds.PISTOL_RELOAD.get()))
+				.addEvents(StaticAnimationProperty.ON_END_EVENTS, SimpleEvent.create(ReusableSources.RELOAD, Side.LOCAL_CLIENT))
+				.newTimePair(0.0F, 10.0F)
+					.addState(EntityState.INACTION, true)
+					.addState(EntityState.CAN_SKILL_EXECUTION, false)
+		);
+		
+		BIPED_RELOAD_RIGHTHAND = builder.nextAccessor("biped/reload_righthand", (accessor) ->
+			new StaticAnimation(false, accessor, Armatures.BIPED)
+				.addEvents(StaticAnimationProperty.ON_BEGIN_EVENTS, SimpleEvent.create(Animations.ReusableSources.PLAY_SOUND, Side.CLIENT).params(TombsSounds.PISTOL_RELOAD.get()))
+				.addEvents(StaticAnimationProperty.ON_END_EVENTS, SimpleEvent.create(ReusableSources.RELOAD, Side.LOCAL_CLIENT))
+				.newTimePair(0.0F, 10.0F)
+					.addState(EntityState.INACTION, true)
+					.addState(EntityState.CAN_SKILL_EXECUTION, false)
+		);
+		
+		BIPED_RELOAD_TWOHAND = builder.nextAccessor("biped/reload_twohand", (accessor) ->
+			new StaticAnimation(false, accessor, Armatures.BIPED)
+				.addEvents(StaticAnimationProperty.ON_BEGIN_EVENTS, SimpleEvent.create(Animations.ReusableSources.PLAY_SOUND, Side.CLIENT).params(TombsSounds.PISTOL_RELOAD.get()))
+				.addEvents(StaticAnimationProperty.ON_END_EVENTS, SimpleEvent.create(ReusableSources.RELOAD, Side.LOCAL_CLIENT))
+				.newTimePair(0.0F, 10.0F)
+					.addState(EntityState.INACTION, true)
+					.addState(EntityState.CAN_SKILL_EXECUTION, false)
+		);
+	}
+	
+	// An inner class that gathers animation events together
+	public static abstract class ReusableSources {
+		public static final AnimationEvent.E1<Joint> MUZZLE_FLASH = (entitypatch, animation, params) -> {
+			OpenMatrix4f animationBoundMatrix = entitypatch.getArmature().getBindedTransformFor(entitypatch.getAnimator().getPose(1.0F), params.first());
+			OpenMatrix4f modelMatrix = MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 180.0F + entitypatch.getYRotO(), 180.0F + entitypatch.getYRot(), 1.0F, 0.9375F, 0.9375F, 0.9375F);
+			animationBoundMatrix.mulFront(modelMatrix);
+			Vec3 particlepos = entitypatch.getOriginal().position().add(OpenMatrix4f.transform(animationBoundMatrix, new Vec3(0.0D, -1.0D, -0.3D)));
+			
+			entitypatch.getOriginal().level().addParticle(TombsParticleTypes.MUZZLE_FLASH.get(), particlepos.x, particlepos.y, particlepos.z, 0.0D, 0.0D, 0.0D);
+		};
+		
+		public static final AnimationEvent.E0 RELOAD = (entitypatch, animation, params) -> {
+			
+			// Reload pistols in each hand
+			entitypatch.getOriginal().getMainHandItem().getCapability(BulletsCapability.BULLETS_CAPABILITY).ifPresent(bulletsCapability -> {
+				bulletsCapability.setBulletsLeft(BulletsCapability.getMaxBullets());
+			});
+			
+			entitypatch.getOriginal().getOffhandItem().getCapability(BulletsCapability.BULLETS_CAPABILITY).ifPresent(bulletsCapability -> {
+				bulletsCapability.setBulletsLeft(BulletsCapability.getMaxBullets());
+			});
+			
+			// Create a reload packet with player entity's id
+			ServerBoundReloadPacket reloadPacket = new ServerBoundReloadPacket(entitypatch.getOriginal().getId());
+			
+			// Send packet
+			NetworkManager.INSTANCE.sendToServer(reloadPacket);
+		};
+	}
+}

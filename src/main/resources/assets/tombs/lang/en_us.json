@@ -1,0 +1,25 @@
+{
+	"creative_tab.tombs": "Tombs Items",
+	
+	"item.tombs.hk_usp9_pistol": "Heckler & Koch USP 9 Dual Pistol",
+	"item.tombs.survivor_pickaxe": "Survivor Pickaxe",
+	"item.tombs.excalibur": "Excalibur",
+	"item.tombs.vintage_spectacles": "Vintage Spectacles",
+	"item.tombs.tombs_ost_music_disc":"Music Disc",
+	"item.tombs.tombs_ost_music_disc.desc": "Tomb Raider OST - By Nathan McCree",
+	"item.tombs.venice_violins_music_disc": "Music Disc",
+	"item.tombs.venice_violins_music_disc.desc":"Venice Violins - By Nathan McCree",
+	
+	"tooltip.tombs.survivor_pickaxe.tooltip":"Sturdy, sharp, & built for survival. \nLara’s climbing pickaxe isn’t just for scaling cliffs—it’s a lifeline in the heat of adventure.",
+	"tooltip.tombs.excalibur.tooltip":"An artifact of immense power, said to be used by monarchs & nobles in their ascension to power.",
+	
+	"key.tombs": "Tombs",
+	"key.tombs.reload": "Reload",
+	
+	"painting.tombs.caves.title": "Caves",
+	"painting.tombs.caves.author": "Vancomb",
+	"painting.tombs.the_crofts.title": "The Crofts",
+	"painting.tombs.the_crofts.author": "Vancomb",
+	
+	"eof": "eof"
+}

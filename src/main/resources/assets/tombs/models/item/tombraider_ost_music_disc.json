@@ -1,0 +1,6 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "tombs:item/tombraider_ost_music_disc"
+	}
+}

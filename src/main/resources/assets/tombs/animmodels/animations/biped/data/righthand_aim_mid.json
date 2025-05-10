@@ -1,0 +1,15 @@
+{
+	"layer": "COMPOSITE_LAYER",
+	"priority": "MIDDLE",
+	"masks":
+	[
+		{
+			"livingmotion": "ALL",
+			"type": "tombs:root_and_right_arm"
+		},
+		{
+			"livingmotion": "IDLE",
+			"type": "none"
+		}
+	]
+}
