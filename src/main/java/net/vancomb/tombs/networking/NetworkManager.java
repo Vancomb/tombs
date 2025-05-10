@@ -21,6 +21,8 @@ public class NetworkManager {
 	public static void registerPackets() {
 		int packetId = 0;
 		
+		INSTANCE.registerMessage(packetId++, ClientBoundBulletPacket.class, ClientBoundBulletPacket::toBytes, ClientBoundBulletPacket::fromBytes, ClientBoundBulletPacket::handle);
 		INSTANCE.registerMessage(packetId++, ServerBoundReloadPacket.class, ServerBoundReloadPacket::toBytes, ServerBoundReloadPacket::fromBytes, ServerBoundReloadPacket::handle);
+		INSTANCE.registerMessage(packetId++, ServerBoundShotPacket.class, ServerBoundShotPacket::toBytes, ServerBoundShotPacket::fromBytes, ServerBoundShotPacket::handle);
 	}
 }

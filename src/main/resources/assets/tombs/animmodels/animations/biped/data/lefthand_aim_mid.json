@@ -5,11 +5,11 @@
 	[
 		{
 			"livingmotion": "ALL",
-			"type":"tombs:root_and_left_arm"
+			"type": "tombs:root_and_left_arm"
 		},
 		{
 			"livingmotion": "IDLE",
-			"type":"none"
+			"type": "none"
 		}
 	]
 }

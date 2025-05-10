@@ -1,8 +1,6 @@
 package net.vancomb.tombs.client.event;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,34 +14,25 @@ import net.vancomb.tombs.Tombs;
 import net.vancomb.tombs.client.input.TombsKeyMappings;
 import net.vancomb.tombs.epicfight.animations.TombsAnimations;
 import net.vancomb.tombs.registry.TombsItems;
+import net.vancomb.tombs.world.capabilities.item.BulletsCapability;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = Tombs.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public abstract class PlayerEvents {
-	private static final int PISTOL_FIRE_COOLDOWN_TICKS = 8;
-	
-	// Cooldown ticks for guns in each hand
-	private static int leftButtonCooldown;
-	private static int rightButtonCooldown;
-	
 	// Variables that handle key down
 	private static boolean leftDown;
-	private static boolean rightDown;
 	
-	// An event fired when the player clicks mouse buttons
 	@SubscribeEvent
-	public static void tombraider$mouseButtonPress(MouseButton.Pre event) {
-		// Save button down state
-		switch (event.getButton()) {
-		case 0 -> {
-			leftDown = event.getAction() == 1;
+	public static void tombs$mouseButtonPress(MouseButton.Pre event) {
+		// Check which button pressed (0: left, 1: right)
+		if (event.getButton() != 0) {
+			return;
 		}
-		case 1 -> {
-			rightDown = event.getAction() == 1;
-		}
-		}
+		
+		// Set downed state depending on key action (1: press 0: release)
+		leftDown = event.getAction() == 1;
 		
 		// when button downed
 		if (event.getAction() != 1) {
@@ -56,33 +45,38 @@ public abstract class PlayerEvents {
 		
 		Player player = Minecraft.getInstance().player;
 		
-		switch (event.getButton()) {
-		// left click
-		case 0 -> {
-			if (
-				player.getOffhandItem().is(TombsItems.HK_USP9_PISTOL.get()) &&
-				player.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get())
-			) {
-				if (leftButtonCooldown <= 0) {
-					firePistolInHand(player, InteractionHand.OFF_HAND);
-				}
-				event.setCanceled(true);
+		BulletsCapability.getBullets(player).ifPresent(bullets -> {
+			if (bullets.tryFiring(player)) {
 			}
-		}
-		// right click
-		case 1 -> {
-			if (TombsItems.HK_USP9_PISTOL.get().equals(player.getMainHandItem().getItem())) {
-				if (rightButtonCooldown <= 0) {
-					firePistolInHand(player, InteractionHand.MAIN_HAND);
-				}
-				event.setCanceled(true);
-			}
-		}
-		}
+			
+			event.setCanceled(true);
+		});
 	}
 	
 	@SubscribeEvent
-	public static void tombraider$keyPress(InputEvent.Key event) {
+	public static void tombs$tickClient(TickEvent.ClientTickEvent event) {
+		if (!checkInGame()) {
+			return;
+		}
+		
+		if (event.phase == TickEvent.Phase.START) {
+			Player player = Minecraft.getInstance().player;
+			
+			BulletsCapability.getBullets(player).ifPresent(bullets -> {
+				// Count cooldown
+				bullets.tick();
+				
+				// Check if key downed
+				if (leftDown) {
+					bullets.tryFiring(player);
+				}
+			});
+		}
+	}
+	
+	// Execute reloading
+	@SubscribeEvent
+	public static void tombs$keyPress(InputEvent.Key event) {
 		if (event.getKey() != TombsKeyMappings.RELOAD.getKey().getValue()) {
 			return;
 		}
@@ -123,40 +117,6 @@ public abstract class PlayerEvents {
 		}
 	}
 	
-	@SubscribeEvent
-	public static void tombraider$tickClient(TickEvent.ClientTickEvent event) {
-		if (!checkInGame()) {
-			return;
-		}
-		
-		if (event.phase == TickEvent.Phase.START) {
-			// Decrease the cooldown ticks
-			if (leftButtonCooldown > 0) leftButtonCooldown--;
-			if (rightButtonCooldown > 0) rightButtonCooldown--;
-			
-			Player player = Minecraft.getInstance().player;
-			
-			if (leftDown) {
-				if (
-					player.getOffhandItem().is(TombsItems.HK_USP9_PISTOL.get()) &&
-					player.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get())
-				) {
-					if (leftButtonCooldown <= 0) {
-						firePistolInHand(player, InteractionHand.OFF_HAND);
-					}
-				}
-			}
-			
-			if (rightDown) {
-				if (TombsItems.HK_USP9_PISTOL.get().equals(player.getMainHandItem().getItem())) {
-					if (rightButtonCooldown <= 0) {
-						firePistolInHand(player, InteractionHand.MAIN_HAND);
-					}
-				}
-			}
-		}
-	}
-	
 	// Check if player in game and no gui screen is opened
 	private static boolean checkInGame() {
 		// when the world is simulated
@@ -172,20 +132,5 @@ public abstract class PlayerEvents {
 		}
 		
 		return true;
-	}
-	
-	private static void firePistolInHand(Player player, InteractionHand hand) {
-		InteractionResult result = Minecraft.getInstance().gameMode.useItem(player, hand);
-		
-		// Cancel the behind process if pistol successfully fired
-		if (result.consumesAction()) {
-			Minecraft.getInstance().gameRenderer.itemInHandRenderer.itemUsed(hand);
-		}
-		
-		if (hand == InteractionHand.MAIN_HAND) {
-			rightButtonCooldown = PISTOL_FIRE_COOLDOWN_TICKS;
-		} else {
-			leftButtonCooldown = PISTOL_FIRE_COOLDOWN_TICKS;
-		}
 	}
 }

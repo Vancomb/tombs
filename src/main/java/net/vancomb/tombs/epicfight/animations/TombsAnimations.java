@@ -71,8 +71,9 @@ public class TombsAnimations {
 				.addEvents(StaticAnimationProperty.ON_BEGIN_EVENTS, SimpleEvent.create(Animations.ReusableSources.PLAY_SOUND, Side.CLIENT).params(TombsSounds.PISTOL_RELOAD.get()))
 				.addEvents(StaticAnimationProperty.ON_END_EVENTS, SimpleEvent.create(ReusableSources.RELOAD, Side.LOCAL_CLIENT))
 				.newTimePair(0.0F, 10.0F)
-					.addState(EntityState.INACTION, true)
-					.addState(EntityState.CAN_SKILL_EXECUTION, false)
+					.addStateRemoveOld(EntityState.INACTION, true)
+					.addStateRemoveOld(EntityState.CAN_BASIC_ATTACK, false)
+					.addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false)
 		);
 		
 		BIPED_RELOAD_RIGHTHAND = builder.nextAccessor("biped/reload_righthand", (accessor) ->
@@ -80,8 +81,9 @@ public class TombsAnimations {
 				.addEvents(StaticAnimationProperty.ON_BEGIN_EVENTS, SimpleEvent.create(Animations.ReusableSources.PLAY_SOUND, Side.CLIENT).params(TombsSounds.PISTOL_RELOAD.get()))
 				.addEvents(StaticAnimationProperty.ON_END_EVENTS, SimpleEvent.create(ReusableSources.RELOAD, Side.LOCAL_CLIENT))
 				.newTimePair(0.0F, 10.0F)
-					.addState(EntityState.INACTION, true)
-					.addState(EntityState.CAN_SKILL_EXECUTION, false)
+					.addStateRemoveOld(EntityState.INACTION, true)
+					.addStateRemoveOld(EntityState.CAN_BASIC_ATTACK, false)
+					.addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false)
 		);
 		
 		BIPED_RELOAD_TWOHAND = builder.nextAccessor("biped/reload_twohand", (accessor) ->
@@ -89,13 +91,15 @@ public class TombsAnimations {
 				.addEvents(StaticAnimationProperty.ON_BEGIN_EVENTS, SimpleEvent.create(Animations.ReusableSources.PLAY_SOUND, Side.CLIENT).params(TombsSounds.PISTOL_RELOAD.get()))
 				.addEvents(StaticAnimationProperty.ON_END_EVENTS, SimpleEvent.create(ReusableSources.RELOAD, Side.LOCAL_CLIENT))
 				.newTimePair(0.0F, 10.0F)
-					.addState(EntityState.INACTION, true)
-					.addState(EntityState.CAN_SKILL_EXECUTION, false)
+					.addStateRemoveOld(EntityState.INACTION, true)
+					.addStateRemoveOld(EntityState.CAN_BASIC_ATTACK, false)
+					.addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false)
 		);
 	}
 	
 	// An inner class that gathers animation events together
 	public static abstract class ReusableSources {
+		
 		public static final AnimationEvent.E1<Joint> MUZZLE_FLASH = (entitypatch, animation, params) -> {
 			OpenMatrix4f animationBoundMatrix = entitypatch.getArmature().getBindedTransformFor(entitypatch.getAnimator().getPose(1.0F), params.first());
 			OpenMatrix4f modelMatrix = MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 180.0F + entitypatch.getYRotO(), 180.0F + entitypatch.getYRot(), 1.0F, 0.9375F, 0.9375F, 0.9375F);
@@ -108,12 +112,8 @@ public class TombsAnimations {
 		public static final AnimationEvent.E0 RELOAD = (entitypatch, animation, params) -> {
 			
 			// Reload pistols in each hand
-			entitypatch.getOriginal().getMainHandItem().getCapability(BulletsCapability.BULLETS_CAPABILITY).ifPresent(bulletsCapability -> {
-				bulletsCapability.setBulletsLeft(BulletsCapability.getMaxBullets());
-			});
-			
-			entitypatch.getOriginal().getOffhandItem().getCapability(BulletsCapability.BULLETS_CAPABILITY).ifPresent(bulletsCapability -> {
-				bulletsCapability.setBulletsLeft(BulletsCapability.getMaxBullets());
+			entitypatch.getOriginal().getCapability(BulletsCapability.BULLETS_CAPABILITY).ifPresent(bulletsCapability -> {
+				bulletsCapability.bulletReload(entitypatch.getOriginal());
 			});
 			
 			// Create a reload packet with player entity's id

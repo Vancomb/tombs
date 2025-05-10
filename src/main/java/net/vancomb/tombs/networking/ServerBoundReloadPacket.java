@@ -36,12 +36,8 @@ public class ServerBoundReloadPacket {
 			Player player = ctx.get().getSender();
 			
 			// Reload pistols in each hand
-			player.getMainHandItem().getCapability(BulletsCapability.BULLETS_CAPABILITY).ifPresent(bulletsCapability -> {
-				bulletsCapability.setBulletsLeft(BulletsCapability.getMaxBullets());
-			});
-			
-			player.getOffhandItem().getCapability(BulletsCapability.BULLETS_CAPABILITY).ifPresent(bulletsCapability -> {
-				bulletsCapability.setBulletsLeft(BulletsCapability.getMaxBullets());
+			player.getCapability(BulletsCapability.BULLETS_CAPABILITY).ifPresent(bulletsCapability -> {
+				bulletsCapability.bulletReload(player);
 			});
 		});
 		
