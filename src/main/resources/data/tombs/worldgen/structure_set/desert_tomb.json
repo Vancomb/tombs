@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "structures": [
     {
@@ -11,4 +12,19 @@
     "separation": 12,
     "salt": 1646207475
   }
+=======
+{
+  "structures": [
+    {
+      "structure": "tombs:desert_tomb",
+      "weight": 10
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 50,
+    "separation": 12,
+    "salt": 1646207475
+  }
+>>>>>>> refs/remotes/origin/1.20.1
 }

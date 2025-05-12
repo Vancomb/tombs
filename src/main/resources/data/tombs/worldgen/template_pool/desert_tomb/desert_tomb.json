@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "fallback": "minecraft:empty",
   "elements": [
@@ -11,4 +12,19 @@
       }
     }
   ]
+=======
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+	{
+      "weight": 1,
+      "element": {
+        "location": "tombs:desert_tomb/desert_tomb",
+        "processors": "minecraft:empty",
+		"projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+>>>>>>> refs/remotes/origin/1.20.1
 }
