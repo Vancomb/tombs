@@ -1,4 +1,4 @@
-package net.vancomb.tombs.item.shared;
+package net.vancomb.tombs.world.item.shared;
 
 import java.util.function.Supplier;
 

@@ -21,6 +21,8 @@ public abstract class TombsSounds {
     
     public static final RegistryObject<SoundEvent> PISTOL_RELOAD = registerSoundEvents("pistol_reload");
     
+    public static final RegistryObject<SoundEvent> EXCALIBUR_SWING = registerSoundEvents("excalibur_swing");
+    
     //Helper Method
     private static RegistryObject<SoundEvent> registerSoundEvents(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Tombs.MODID, name)));

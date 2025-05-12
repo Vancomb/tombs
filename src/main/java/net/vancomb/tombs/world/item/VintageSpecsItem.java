@@ -1,4 +1,4 @@
-package net.vancomb.tombs.item;
+package net.vancomb.tombs.world.item;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,8 +21,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.vancomb.tombs.Tombs;
 import net.vancomb.tombs.client.model.TombsModelLayers;
 import net.vancomb.tombs.client.model.VintageSpecModel;
-import net.vancomb.tombs.item.shared.TombsArmorMaterials;
 import net.vancomb.tombs.registry.TombsItems;
+import net.vancomb.tombs.world.item.shared.TombsArmorMaterials;
 
 public class VintageSpecsItem extends ArmorItem {
     public VintageSpecsItem(Properties pProperties) {

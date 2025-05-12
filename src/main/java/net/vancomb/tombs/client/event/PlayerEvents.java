@@ -14,7 +14,7 @@ import net.vancomb.tombs.Tombs;
 import net.vancomb.tombs.client.input.TombsKeyMappings;
 import net.vancomb.tombs.epicfight.animations.TombsAnimations;
 import net.vancomb.tombs.registry.TombsItems;
-import net.vancomb.tombs.world.capabilities.item.BulletsCapability;
+import net.vancomb.tombs.world.capabilities.BulletsCapability;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
@@ -46,10 +46,12 @@ public abstract class PlayerEvents {
 		Player player = Minecraft.getInstance().player;
 		
 		BulletsCapability.getBullets(player).ifPresent(bullets -> {
-			if (bullets.tryFiring(player)) {
-			}
+			bullets.tryFiring(player);
 			
-			event.setCanceled(true);
+			// Cancel behind process when holding pistols
+			if (bullets.isHoldingCompatibleWeapon(player)) {
+				event.setCanceled(true);
+			}
 		});
 	}
 	

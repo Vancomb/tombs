@@ -29,6 +29,16 @@
 			}
 		]
 	},
+	"excalibur_swing": {
+		"category":"player",
+        "subtitle":"excalibur_swing",
+		"sounds": [
+			{
+				"name": "tombs:excalibur_swing",
+        		"stream": false
+			}
+		]
+	},
 	"tombraider_ost": {
 		"category":"record",
         "subtitle":"tombraider_ost",

@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
-import net.vancomb.tombs.world.capabilities.item.BulletsCapability;
+import net.vancomb.tombs.world.capabilities.BulletsCapability;
 
 public class ClientBoundBulletPacket {
 	private final int remainBullet;

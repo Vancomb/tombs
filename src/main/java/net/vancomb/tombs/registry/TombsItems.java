@@ -8,10 +8,10 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.vancomb.tombs.Tombs;
-import net.vancomb.tombs.item.ExcaliburItem;
-import net.vancomb.tombs.item.HKUSP9PistolItem;
-import net.vancomb.tombs.item.SurvivorPickaxeItem;
-import net.vancomb.tombs.item.VintageSpecsItem;
+import net.vancomb.tombs.world.item.ExcaliburItem;
+import net.vancomb.tombs.world.item.HKUSP9PistolItem;
+import net.vancomb.tombs.world.item.SurvivorPickaxeItem;
+import net.vancomb.tombs.world.item.VintageSpecsItem;
 
 public abstract class TombsItems {
 	// To register modded items, create a deferred reigster with mod id
@@ -29,7 +29,7 @@ public abstract class TombsItems {
 	);
 	
 	public static final RegistryObject<Item> EXCALIBUR = ITEMS.register("excalibur", () ->
-		new ExcaliburItem(Tiers.NETHERITE, 11 , -2.85F, new Item.Properties().rarity(Rarity.EPIC))
+		new ExcaliburItem(Tiers.NETHERITE, new Item.Properties().rarity(Rarity.EPIC))
 	);
 	
 	public static final RegistryObject<Item> VINTAGE_SPECTACLES = ITEMS.register("vintage_spectacles", () ->

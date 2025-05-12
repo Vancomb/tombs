@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
-import net.vancomb.tombs.world.capabilities.item.BulletsCapability;
+import net.vancomb.tombs.world.capabilities.BulletsCapability;
 
 public class ServerBoundReloadPacket {
 	private final int entityId;

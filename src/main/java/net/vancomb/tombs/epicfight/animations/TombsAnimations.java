@@ -9,7 +9,7 @@ import net.vancomb.tombs.networking.NetworkManager;
 import net.vancomb.tombs.networking.ServerBoundReloadPacket;
 import net.vancomb.tombs.registry.TombsParticleTypes;
 import net.vancomb.tombs.registry.TombsSounds;
-import net.vancomb.tombs.world.capabilities.item.BulletsCapability;
+import net.vancomb.tombs.world.capabilities.BulletsCapability;
 import yesman.epicfight.api.animation.AnimationManager.AnimationAccessor;
 import yesman.epicfight.api.animation.AnimationManager.AnimationBuilder;
 import yesman.epicfight.api.animation.AnimationManager.AnimationRegistryEvent;
@@ -17,8 +17,10 @@ import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationEvent.Side;
 import yesman.epicfight.api.animation.property.AnimationEvent.SimpleEvent;
+import yesman.epicfight.api.animation.property.AnimationProperty.AttackAnimationProperty;
 import yesman.epicfight.api.animation.property.AnimationProperty.StaticAnimationProperty;
 import yesman.epicfight.api.animation.types.AimAnimation;
+import yesman.epicfight.api.animation.types.BasicAttackAnimation;
 import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.animation.types.ReboundAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
@@ -39,6 +41,10 @@ public class TombsAnimations {
 	public static AnimationAccessor<StaticAnimation> BIPED_RELOAD_LEFTHAND;
 	public static AnimationAccessor<StaticAnimation> BIPED_RELOAD_RIGHTHAND;
 	public static AnimationAccessor<StaticAnimation> BIPED_RELOAD_TWOHAND;
+	
+	public static AnimationAccessor<BasicAttackAnimation> BIPED_EXCALIBUR_AUTO1;
+	public static AnimationAccessor<BasicAttackAnimation> BIPED_EXCALIBUR_AUTO2;
+	public static AnimationAccessor<BasicAttackAnimation> BIPED_EXCALIBUR_AUTO3;
 	
 	// Add event subscriber that registers epic fight animations
 	@SubscribeEvent
@@ -94,6 +100,21 @@ public class TombsAnimations {
 					.addStateRemoveOld(EntityState.INACTION, true)
 					.addStateRemoveOld(EntityState.CAN_BASIC_ATTACK, false)
 					.addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false)
+		);
+		
+		BIPED_EXCALIBUR_AUTO1 = builder.nextAccessor("biped/excalibur_auto1", (accessor) ->
+			new BasicAttackAnimation(0.15F, 0.2F, 0.3F, 0.5F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F)
+		);
+		
+		BIPED_EXCALIBUR_AUTO2 = builder.nextAccessor("biped/excalibur_auto2", (accessor) ->
+			new BasicAttackAnimation(0.2F, 0.25F, 0.35F, 0.65F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F)
+		);
+		
+		BIPED_EXCALIBUR_AUTO3 = builder.nextAccessor("biped/excalibur_auto3", (accessor) ->
+			new BasicAttackAnimation(0.1F, 0.2F, 0.35F, 0.6F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F)
 		);
 	}
 	

@@ -29,24 +29,36 @@ public class HKUSP9Capability extends RangedWeaponCapability {
 		this.twohandedRangeAnimationModifiers.put(LivingMotions.AIM, TombsAnimations.BIPED_TWOHAND_AIM);
 	}
 	
+	/**
+	 * Return the living motion changes depending on the player's current style
+	 */
 	@Override
 	public Map<LivingMotion, AnimationAccessor<? extends StaticAnimation>> getLivingMotionModifier(LivingEntityPatch<?> playerpatch, InteractionHand hand) {
 		Style style = this.getStyle(playerpatch);
 		
 		if (style == Styles.TWO_HAND) {
+			// Twohand: when holding pistols in both hands
 			return this.twohandedRangeAnimationModifiers;
 		} else if (hand == InteractionHand.MAIN_HAND) {
+			// Onehand: when holding a pistol in main hand
 			return super.getLivingMotionModifier(playerpatch, hand);
 		} else {
+			// Onehand: when holding a pistol in off hand
 			return this.offhandRangeAnimationModifiers;
 		}
 	}
 	
+	/**
+	 * Determines if this item can be hold by offhand
+	 */
 	@Override
 	public boolean canBePlacedOffhand() {
 		return true;
 	}
 	
+	/**
+	 * Determines if the offhand item is available with this item
+	 */
 	@Override
 	public boolean checkOffhandValid(LivingEntityPatch<?> entitypatch) {
 		if (entitypatch.getOriginal().getOffhandItem().is(TombsItems.HK_USP9_PISTOL.get())) {

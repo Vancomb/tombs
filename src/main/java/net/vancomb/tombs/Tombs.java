@@ -7,6 +7,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.vancomb.tombs.networking.NetworkManager;
 import net.vancomb.tombs.registry.TombsCreativeTabs;
+import net.vancomb.tombs.registry.TombsEntityTypes;
 import net.vancomb.tombs.registry.TombsItems;
 import net.vancomb.tombs.registry.TombsPaintingVariants;
 import net.vancomb.tombs.registry.TombsParticleTypes;
@@ -33,6 +34,9 @@ public class Tombs {
         
         // Register the Deferred Register to the mod event bus so painting variants get registered
         TombsPaintingVariants.PAINTING_VARIANTS.register(modEventBus);
+        
+        // Register the Deferred Register to the mod event bus so entity types get registered
+        TombsEntityTypes.ENTITIES.register(modEventBus);
         
         modEventBus.addListener(this::doCommonStuff);
         

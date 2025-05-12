@@ -1,4 +1,4 @@
-package net.vancomb.tombs.world.capabilities.item;
+package net.vancomb.tombs.world.capabilities;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +46,6 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 /**
  * A capability object that counts left bullets
  */
-@Mod.EventBusSubscriber(modid = Tombs.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BulletsCapability {
 	
 	// Max bullets when reload
@@ -64,12 +63,6 @@ public class BulletsCapability {
 	
 	// A capability key class to get an instance of bullets capability from item stack
 	public static final Capability<BulletsCapability> BULLETS_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
-    
-	// Register capability class
-	@SubscribeEvent
-	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-		event.register(BulletsCapability.class);
-	}
 	
 	// A helper method gets bullet capability from itemstack
 	public static LazyOptional<BulletsCapability> getBullets(Player player) {
@@ -118,7 +111,7 @@ public class BulletsCapability {
 		boolean offhandPistol = offhandItem.is(TombsItems.HK_USP9_PISTOL.get());
 		
 		if (!this.canShot(player)) {
-			if (player.level().isClientSide() && this.cooldown <= 0) {
+			if (player.level().isClientSide() && this.cooldown <= 0 && this.isHoldingCompatibleWeapon(player)) {
 				// Play the shooting sound in local
 				player.level().playLocalSound(player.blockPosition(), TombsSounds.PISTOL_EMPTY.get(), SoundSource.PLAYERS, 1.0F, 1.0F, false);
 				Minecraft.getInstance().gui.setOverlayMessage(Component.literal("No bullets"), false);
@@ -149,8 +142,8 @@ public class BulletsCapability {
 		return true;
 	}
 	
-	public void updateBulldets() {
-		
+	public boolean isHoldingCompatibleWeapon(Player player) {
+		return player.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get()) || player.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get());
 	}
 	
 	private void setCooldown(boolean twohand) {
@@ -245,11 +238,19 @@ public class BulletsCapability {
 		}
 	}
 	
+	@Mod.EventBusSubscriber(modid = Tombs.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+	public static class ModBusEvent {
+		@SubscribeEvent
+		public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+			event.register(BulletsCapability.class);
+		}
+	}
+	
 	/**
 	 * An inner class to register capability attach event
 	 */
 	@Mod.EventBusSubscriber(modid = Tombs.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-	public static class Event {
+	public static class ForgeEvent {
 		// Capability key
 		private static final ResourceLocation BULLETS = ResourceLocation.fromNamespaceAndPath(EpicFightMod.MODID, "bullets");
 		

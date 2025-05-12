@@ -1,4 +1,4 @@
-package net.vancomb.tombs.item;
+package net.vancomb.tombs.world.item;
 
 import java.util.function.Predicate;
 
@@ -13,7 +13,7 @@ import net.vancomb.tombs.Tombs;
 import net.vancomb.tombs.networking.ClientBoundBulletPacket;
 import net.vancomb.tombs.networking.NetworkManager;
 import net.vancomb.tombs.registry.TombsItems;
-import net.vancomb.tombs.world.capabilities.item.BulletsCapability;
+import net.vancomb.tombs.world.capabilities.BulletsCapability;
 
 public class HKUSP9PistolItem extends ProjectileWeaponItem {
 	public static final Predicate<ItemStack> NO_ITMES = (p_43017_) -> {
@@ -53,6 +53,7 @@ public class HKUSP9PistolItem extends ProjectileWeaponItem {
     				if (maxBullets < currentBullets) {
     					// Correct the current bullets to max bullets
     					bullets.setRemainBullet(maxBullets);
+    					
     					// Synchronize remain bullets from server to client
     					NetworkManager.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundBulletPacket(bullets.getRemainBullets()));
     				}

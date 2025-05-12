@@ -1,4 +1,4 @@
-package net.vancomb.tombs.item;
+package net.vancomb.tombs.world.item;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
