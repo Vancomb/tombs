@@ -25,7 +25,7 @@ public abstract class TombsItems {
 	);
 	
 	public static final RegistryObject<Item> SURVIVOR_PICKAXE = ITEMS.register("survivor_pickaxe", () ->
-		new SurvivorPickaxeItem(Tiers.IRON, 3, -2.6F, new Item.Properties().rarity(Rarity.EPIC))
+		new SurvivorPickaxeItem(Tiers.IRON, new Item.Properties().rarity(Rarity.EPIC))
 	);
 	
 	public static final RegistryObject<Item> EXCALIBUR = ITEMS.register("excalibur", () ->

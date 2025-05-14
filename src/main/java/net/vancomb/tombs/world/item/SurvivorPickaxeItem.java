@@ -7,14 +7,17 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SurvivorPickaxeItem extends PickaxeItem {
-    public SurvivorPickaxeItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
-        super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+	private static final int DAMAGE_MODIFIER = 3;
+	private static final float ATTACK_SPEED_MODIFIER = -2.6F;
+	
+    public SurvivorPickaxeItem(Tier pTier, Properties pProperties) {
+        super(pTier, DAMAGE_MODIFIER, ATTACK_SPEED_MODIFIER, pProperties);
     }
     
     // Append tooltip when hovers
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("tooltip.tombraider.survivor_pickaxe.tooltip"));
+        pTooltipComponents.add(Component.translatable("tooltip.tombs.survivor_pickaxe.tooltip"));
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 }

@@ -1,5 +1,6 @@
 package net.vancomb.tombs.epicfight.animations;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -20,10 +21,12 @@ import yesman.epicfight.api.animation.property.AnimationEvent.SimpleEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty.AttackAnimationProperty;
 import yesman.epicfight.api.animation.property.AnimationProperty.StaticAnimationProperty;
 import yesman.epicfight.api.animation.types.AimAnimation;
+import yesman.epicfight.api.animation.types.AirSlashAnimation;
 import yesman.epicfight.api.animation.types.BasicAttackAnimation;
 import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.animation.types.ReboundAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.animation.types.AttackAnimation.Phase;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.gameasset.Animations;
@@ -34,17 +37,23 @@ public class TombsAnimations {
 	public static AnimationAccessor<AimAnimation> BIPED_LEFTHAND_AIM;
 	public static AnimationAccessor<AimAnimation> BIPED_RIGHTHAND_AIM;
 	public static AnimationAccessor<AimAnimation> BIPED_TWOHAND_AIM;
-	
 	public static AnimationAccessor<ReboundAnimation> BIPED_LEFTHAND_SHOT;
 	public static AnimationAccessor<ReboundAnimation> BIPED_RIGHTHAND_SHOT;
-	
 	public static AnimationAccessor<StaticAnimation> BIPED_RELOAD_LEFTHAND;
 	public static AnimationAccessor<StaticAnimation> BIPED_RELOAD_RIGHTHAND;
 	public static AnimationAccessor<StaticAnimation> BIPED_RELOAD_TWOHAND;
+	public static AnimationAccessor<StaticAnimation> BIPED_SURVIVOR_PICKAXE_DUAL_IDLE;
 	
 	public static AnimationAccessor<BasicAttackAnimation> BIPED_EXCALIBUR_AUTO1;
 	public static AnimationAccessor<BasicAttackAnimation> BIPED_EXCALIBUR_AUTO2;
 	public static AnimationAccessor<BasicAttackAnimation> BIPED_EXCALIBUR_AUTO3;
+	public static AnimationAccessor<BasicAttackAnimation> BIPED_SURVIVOR_PICKAXE_AUTO1;
+	public static AnimationAccessor<BasicAttackAnimation> BIPED_SURVIVOR_PICKAXE_AUTO2;
+	public static AnimationAccessor<AirSlashAnimation> BIPED_SURVIVOR_PICKAXE_AIRSLASH;
+	public static AnimationAccessor<BasicAttackAnimation> BIPED_SURVIVOR_PICKAXE_DUAL_AUTO1;
+	public static AnimationAccessor<BasicAttackAnimation> BIPED_SURVIVOR_PICKAXE_DUAL_AUTO2;
+	public static AnimationAccessor<BasicAttackAnimation> BIPED_SURVIVOR_PICKAXE_DUAL_AUTO3;
+	public static AnimationAccessor<BasicAttackAnimation> BIPED_SURVIVOR_PICKAXE_DUAL_AUTO4;
 	
 	// Add event subscriber that registers epic fight animations
 	@SubscribeEvent
@@ -102,19 +111,62 @@ public class TombsAnimations {
 					.addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false)
 		);
 		
+		BIPED_SURVIVOR_PICKAXE_DUAL_IDLE = builder.nextAccessor("biped/survivor_pickaxe_dual_idle", (accessor) -> new StaticAnimation(true, accessor, Armatures.BIPED));
+		
 		BIPED_EXCALIBUR_AUTO1 = builder.nextAccessor("biped/excalibur_auto1", (accessor) ->
 			new BasicAttackAnimation(0.15F, 0.2F, 0.3F, 0.5F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
-				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.15F)
 		);
 		
 		BIPED_EXCALIBUR_AUTO2 = builder.nextAccessor("biped/excalibur_auto2", (accessor) ->
 			new BasicAttackAnimation(0.2F, 0.25F, 0.35F, 0.65F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
-				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.15F)
 		);
 		
 		BIPED_EXCALIBUR_AUTO3 = builder.nextAccessor("biped/excalibur_auto3", (accessor) ->
 			new BasicAttackAnimation(0.1F, 0.2F, 0.35F, 0.6F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
-				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.15F)
+		);
+		
+		BIPED_SURVIVOR_PICKAXE_AUTO1 = builder.nextAccessor("biped/survivor_pickaxe_auto1", (accessor) ->
+			new BasicAttackAnimation(0.15F, 0.2F, 0.3F, 0.5F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.4F)
+		);
+		
+		BIPED_SURVIVOR_PICKAXE_AUTO2 = builder.nextAccessor("biped/survivor_pickaxe_auto2", (accessor) ->
+			new BasicAttackAnimation(0.2F, 0.2F, 0.3F, 0.5F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.4F)
+		);
+		
+		BIPED_SURVIVOR_PICKAXE_AIRSLASH = builder.nextAccessor("biped/survivor_pickaxe_airslash", (accessor) ->
+			new AirSlashAnimation(0.15F, 0.4F, 0.45F, 0.75F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.4F)
+		);
+		
+		BIPED_SURVIVOR_PICKAXE_DUAL_AUTO1 = builder.nextAccessor("biped/survivor_pickaxe_dual_auto1", (accessor) ->
+			new BasicAttackAnimation(0.15F, accessor, Armatures.BIPED,
+					new Phase(0.0F, 0.05F, 0.1F, 0.15F, 0.15F, InteractionHand.OFF_HAND, Armatures.BIPED.get().toolL, null),
+					new Phase(0.15F, 0.25F, 0.35F, 0.55F, 0.55F, InteractionHand.OFF_HAND, Armatures.BIPED.get().toolL, null)
+				)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.4F)
+		);
+		
+		BIPED_SURVIVOR_PICKAXE_DUAL_AUTO2 = builder.nextAccessor("biped/survivor_pickaxe_dual_auto2", (accessor) ->
+			new BasicAttackAnimation(0.05F, 0.25F, 0.3F, 0.5F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.4F)
+		);
+		
+		BIPED_SURVIVOR_PICKAXE_DUAL_AUTO3 = builder.nextAccessor("biped/survivor_pickaxe_dual_auto3", (accessor) ->
+			new BasicAttackAnimation(0.15F, accessor, Armatures.BIPED,
+					new Phase(0.0F, 0.05F, 0.15F, 0.25F, 0.25F, InteractionHand.MAIN_HAND, Armatures.BIPED.get().toolR, null),
+					new Phase(0.25F, 0.25F, 0.35F, 0.55F, 0.55F, InteractionHand.OFF_HAND, Armatures.BIPED.get().toolL, null)
+				)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.4F)
+		);
+		
+		BIPED_SURVIVOR_PICKAXE_DUAL_AUTO4 = builder.nextAccessor("biped/survivor_pickaxe_dual_auto4", (accessor) ->
+			new BasicAttackAnimation(0.1F, 0.35F, 0.45F, 0.6F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.4F)
 		);
 	}
 	
