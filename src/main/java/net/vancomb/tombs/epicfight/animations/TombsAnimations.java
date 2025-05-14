@@ -114,17 +114,17 @@ public class TombsAnimations {
 		BIPED_SURVIVOR_PICKAXE_DUAL_IDLE = builder.nextAccessor("biped/survivor_pickaxe_dual_idle", (accessor) -> new StaticAnimation(true, accessor, Armatures.BIPED));
 		
 		BIPED_EXCALIBUR_AUTO1 = builder.nextAccessor("biped/excalibur_auto1", (accessor) ->
-			new BasicAttackAnimation(0.15F, 0.2F, 0.3F, 0.5F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+			new BasicAttackAnimation(0.15F, 0.25F, 0.35F, 0.5F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.15F)
 		);
 		
 		BIPED_EXCALIBUR_AUTO2 = builder.nextAccessor("biped/excalibur_auto2", (accessor) ->
-			new BasicAttackAnimation(0.2F, 0.25F, 0.35F, 0.65F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+			new BasicAttackAnimation(0.2F, 0.3F, 0.4F, 0.65F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.15F)
 		);
 		
 		BIPED_EXCALIBUR_AUTO3 = builder.nextAccessor("biped/excalibur_auto3", (accessor) ->
-			new BasicAttackAnimation(0.1F, 0.2F, 0.35F, 0.6F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+			new BasicAttackAnimation(0.1F, 0.3F, 0.45F, 0.6F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.15F)
 		);
 		
