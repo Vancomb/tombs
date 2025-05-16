@@ -1,9 +1,12 @@
 package net.vancomb.tombs;
 
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -17,6 +20,7 @@ import net.vancomb.tombs.registry.TombsPaintingVariants;
 import net.vancomb.tombs.registry.TombsParticleTypes;
 import net.vancomb.tombs.registry.TombsSounds;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
+import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
 @Mod(Tombs.MODID)
 public class Tombs {
@@ -47,6 +51,18 @@ public class Tombs {
         
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        
+        if (ModList.get().isLoaded("curios")) {
+        	MinecraftForge.EVENT_BUS.<CurioChangeEvent>addListener((event) -> {
+        		if ("head".equals(event.getIdentifier())) {
+        			if (event.getTo().is(TombsItems.VINTAGE_SPECTACLES.get())) {
+        				event.getEntity().addEffect(new MobEffectInstance(MobEffects.LUCK, -1, 0, false, false, true));
+            		} else if (event.getFrom().is(TombsItems.VINTAGE_SPECTACLES.get())) {
+            			event.getEntity().removeEffect(MobEffects.LUCK);
+            		}
+        		}
+        	});
+        }
     }
 	
 	private void doCommonStuff(final FMLCommonSetupEvent event) {
@@ -58,7 +74,9 @@ public class Tombs {
 	public static class ClientModEvents {
 		@SubscribeEvent
 		public static void onClientSetup(FMLClientSetupEvent event) {
-			CuriosRendererRegistry.register(TombsItems.VINTAGE_SPECTACLES.get(), HeadRenderer::new);
+			if (ModList.get().isLoaded("curios")) {
+				CuriosRendererRegistry.register(TombsItems.VINTAGE_SPECTACLES.get(), HeadRenderer::new);
+			}
 		}
     }
 }
