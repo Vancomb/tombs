@@ -38,25 +38,5 @@
         		"stream": false
 			}
 		]
-	},
-	"tombraider_ost": {
-		"category":"record",
-        "subtitle":"tombraider_ost",
-		"sounds": [
-			{
-				"name": "tombs:tombraider_ost",
-        		"stream": true
-			}
-		]
-	},
-	"venice_violins": {
-		"category":"record",
-        "subtitle":"venice_violins",
-		"sounds": [
-			{
-				"name": "tombs:venice_violins",
-        		"stream": true
-			}
-		]
 	}
 }

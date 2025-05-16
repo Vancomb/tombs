@@ -25,8 +25,6 @@ public abstract class TombsCreativeTabs {
                 output.accept(TombsItems.SURVIVOR_PICKAXE.get());
                 output.accept(TombsItems.EXCALIBUR.get());
                 output.accept(TombsItems.VINTAGE_SPECTACLES.get());
-                output.accept(TombsItems.TOMBRAIDER_OST_MUSIC_DISC.get());
-                output.accept(TombsItems.VENICE_VIOLINS_MUSIC_DISC.get());
             })
             .build()
     );

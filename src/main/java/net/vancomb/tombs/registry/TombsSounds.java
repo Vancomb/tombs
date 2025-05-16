@@ -10,10 +10,6 @@ import net.vancomb.tombs.Tombs;
 
 public abstract class TombsSounds {
 	public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Tombs.MODID);
-	
-    public static final RegistryObject<SoundEvent> TOMBRAIDER_OST = registerSoundEvents("tombraider_ost");
-    
-    public static final RegistryObject<SoundEvent> VENICE_VIOLINS = registerSoundEvents("venice_violins");
     
     public static final RegistryObject<SoundEvent> PISTOL_SHOT = registerSoundEvents("pistol_shot");
     

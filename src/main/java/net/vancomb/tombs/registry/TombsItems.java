@@ -2,7 +2,6 @@ package net.vancomb.tombs.registry;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.RecordItem;
 import net.minecraft.world.item.Tiers;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -35,13 +34,4 @@ public abstract class TombsItems {
 	public static final RegistryObject<Item> VINTAGE_SPECTACLES = ITEMS.register("vintage_spectacles", () ->
 		new VintageSpecsItem(new Item.Properties())
 	);
-	
-    // MUSIC DISCS
-    public static final RegistryObject<Item> TOMBRAIDER_OST_MUSIC_DISC  = ITEMS.register("tombraider_ost_music_disc", () ->
-    	new RecordItem(6, TombsSounds.TOMBRAIDER_OST, new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 3920)
-    );
-
-    public static final RegistryObject<Item> VENICE_VIOLINS_MUSIC_DISC  = ITEMS.register("venice_violins_music_disc", () ->
-    	new RecordItem(6, TombsSounds.VENICE_VIOLINS, new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 3200)
-    );
 }
