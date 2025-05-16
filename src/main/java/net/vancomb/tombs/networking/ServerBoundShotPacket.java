@@ -35,7 +35,7 @@ public class ServerBoundShotPacket {
 			// Get packet send player
 			Player player = ctx.get().getSender();
 			
-			// Reload pistols in each hand
+			// Shot pistols in hand
 			player.getCapability(BulletsCapability.BULLETS_CAPABILITY).ifPresent(bulletsCapability -> {
 				bulletsCapability.tryFiring(player);
 			});

@@ -5,6 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.vancomb.tombs.world.entity.ExcaliburProjectile;
 import yesman.epicfight.api.animation.types.AttackAnimation;
+import yesman.epicfight.api.animation.types.DashAttackAnimation;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.WeaponCapability;
@@ -17,6 +18,10 @@ public class ExcaliburCapability extends WeaponCapability {
 	// Create projectiles
 	@Override
 	public void onStrike(LivingEntityPatch<?> entitypatch, AttackAnimation animation) {
+		if (!animation.isBasicAttackAnimation() || animation instanceof DashAttackAnimation) {
+			return;
+		}
+		
 		LivingEntity shooter = entitypatch.getOriginal();
 		float spreadDegree = 3.0F;
 		

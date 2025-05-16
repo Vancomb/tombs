@@ -23,6 +23,7 @@ import yesman.epicfight.api.animation.property.AnimationProperty.StaticAnimation
 import yesman.epicfight.api.animation.types.AimAnimation;
 import yesman.epicfight.api.animation.types.AirSlashAnimation;
 import yesman.epicfight.api.animation.types.BasicAttackAnimation;
+import yesman.epicfight.api.animation.types.DashAttackAnimation;
 import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.animation.types.ReboundAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
@@ -49,6 +50,7 @@ public class TombsAnimations {
 	public static AnimationAccessor<BasicAttackAnimation> BIPED_EXCALIBUR_AUTO3;
 	public static AnimationAccessor<BasicAttackAnimation> BIPED_SURVIVOR_PICKAXE_AUTO1;
 	public static AnimationAccessor<BasicAttackAnimation> BIPED_SURVIVOR_PICKAXE_AUTO2;
+	public static AnimationAccessor<DashAttackAnimation> BIPED_SURVIVOR_PICKAXE_DASH;
 	public static AnimationAccessor<AirSlashAnimation> BIPED_SURVIVOR_PICKAXE_AIRSLASH;
 	public static AnimationAccessor<BasicAttackAnimation> BIPED_SURVIVOR_PICKAXE_DUAL_AUTO1;
 	public static AnimationAccessor<BasicAttackAnimation> BIPED_SURVIVOR_PICKAXE_DUAL_AUTO2;
@@ -135,6 +137,11 @@ public class TombsAnimations {
 		
 		BIPED_SURVIVOR_PICKAXE_AUTO2 = builder.nextAccessor("biped/survivor_pickaxe_auto2", (accessor) ->
 			new BasicAttackAnimation(0.2F, 0.2F, 0.3F, 0.5F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED)
+				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.4F)
+		);
+		
+		BIPED_SURVIVOR_PICKAXE_DASH = builder.nextAccessor("biped/survivor_pickaxe_dash", (accessor) ->
+			new DashAttackAnimation(0.15F, 0.25F, 0.25F, 0.35F, 0.5F, null, Armatures.BIPED.get().toolR, accessor, Armatures.BIPED, true)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.4F)
 		);
 		

@@ -3,10 +3,8 @@ package net.vancomb.tombs.world.capabilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -55,7 +53,7 @@ public class BulletsCapability {
 	private static final int COOLDOWN_TICKS = 10;
 	
 	// Max accelerating when shot successively
-	private static final int MAX_FIRE_ACCELRATION = 6;
+	private static final int MAX_FIRE_ACCELRATION = 4;
 	
 	public static int getMaxBullets() {
 		return MAX_BULLETS;
@@ -105,6 +103,12 @@ public class BulletsCapability {
 	}
 	
 	public boolean tryFiring(Player player) {
+		LivingEntityPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(player, LivingEntityPatch.class);
+		
+		if (!entitypatch.getEntityState().canUseItem()) {
+			return false;
+		}
+		
 		ItemStack mainhandItem = player.getMainHandItem();
 		ItemStack offhandItem = player.getOffhandItem();
 		boolean mainhandPistol = mainhandItem.is(TombsItems.HK_USP9_PISTOL.get());
@@ -114,8 +118,6 @@ public class BulletsCapability {
 			if (player.level().isClientSide() && this.cooldown <= 0 && this.isHoldingCompatibleWeapon(player)) {
 				// Play the shooting sound in local
 				player.level().playLocalSound(player.blockPosition(), TombsSounds.PISTOL_EMPTY.get(), SoundSource.PLAYERS, 1.0F, 1.0F, false);
-				Minecraft.getInstance().gui.setOverlayMessage(Component.literal("No bullets"), false);
-				
 				this.setCooldown(mainhandPistol && offhandPistol);
 			}
 			
@@ -143,7 +145,7 @@ public class BulletsCapability {
 	}
 	
 	public boolean isHoldingCompatibleWeapon(Player player) {
-		return player.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get()) || player.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get());
+		return player.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get()) || player.getOffhandItem().is(TombsItems.HK_USP9_PISTOL.get());
 	}
 	
 	private void setCooldown(boolean twohand) {
@@ -192,12 +194,6 @@ public class BulletsCapability {
 			});
 			
 			NetworkManager.INSTANCE.sendToServer(new ServerBoundShotPacket(player.getId()));
-			
-			if (this.canShot(player)) {
-				Minecraft.getInstance().gui.setOverlayMessage(Component.literal(this.getRemainBullets() + " remains"), false);
-			} else {
-				Minecraft.getInstance().gui.setOverlayMessage(Component.literal("No bullets"), false);
-			}
 		}
 	}
 	
