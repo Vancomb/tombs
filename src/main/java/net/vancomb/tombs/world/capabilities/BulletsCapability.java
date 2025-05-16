@@ -14,7 +14,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -32,6 +31,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import net.vancomb.tombs.Tombs;
 import net.vancomb.tombs.epicfight.animations.TombsAnimations;
+import net.vancomb.tombs.epicfight.capabilities.item.common.TombsWeaponCategory;
 import net.vancomb.tombs.networking.ClientBoundBulletPacket;
 import net.vancomb.tombs.networking.NetworkManager;
 import net.vancomb.tombs.networking.ServerBoundShotPacket;
@@ -105,14 +105,16 @@ public class BulletsCapability {
 	public boolean tryFiring(Player player) {
 		LivingEntityPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(player, LivingEntityPatch.class);
 		
+		if (entitypatch == null) {
+			return false;
+		}
+		
 		if (!entitypatch.getEntityState().canUseItem()) {
 			return false;
 		}
 		
-		ItemStack mainhandItem = player.getMainHandItem();
-		ItemStack offhandItem = player.getOffhandItem();
-		boolean mainhandPistol = mainhandItem.is(TombsItems.HK_USP9_PISTOL.get());
-		boolean offhandPistol = offhandItem.is(TombsItems.HK_USP9_PISTOL.get());
+		boolean mainhandPistol = entitypatch.getAdvancedHoldingItemCapability(InteractionHand.MAIN_HAND).getWeaponCategory() == TombsWeaponCategory.USP9;
+		boolean offhandPistol = entitypatch.getAdvancedHoldingItemCapability(InteractionHand.OFF_HAND).getWeaponCategory() == TombsWeaponCategory.USP9;
 		
 		if (!this.canShot(player)) {
 			if (player.level().isClientSide() && this.cooldown <= 0 && this.isHoldingCompatibleWeapon(player)) {
@@ -145,7 +147,15 @@ public class BulletsCapability {
 	}
 	
 	public boolean isHoldingCompatibleWeapon(Player player) {
-		return player.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get()) || player.getOffhandItem().is(TombsItems.HK_USP9_PISTOL.get());
+		LivingEntityPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(player, LivingEntityPatch.class);
+		
+		if (entitypatch == null) {
+			return player.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get()) || player.getOffhandItem().is(TombsItems.HK_USP9_PISTOL.get());
+		} else {
+			boolean mainhandPistol = entitypatch.getAdvancedHoldingItemCapability(InteractionHand.MAIN_HAND).getWeaponCategory() == TombsWeaponCategory.USP9;
+			boolean offhandPistol = entitypatch.getAdvancedHoldingItemCapability(InteractionHand.OFF_HAND).getWeaponCategory() == TombsWeaponCategory.USP9;
+			return mainhandPistol || offhandPistol;
+		}
 	}
 	
 	private void setCooldown(boolean twohand) {

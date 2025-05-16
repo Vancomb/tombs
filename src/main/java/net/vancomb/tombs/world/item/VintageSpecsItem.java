@@ -54,12 +54,14 @@ public class VintageSpecsItem extends ArmorItem {
 		return Tombs.MODID + ":textures/model/armor/vintage_specs.png";
 	}
     
-    @Mod.EventBusSubscriber(modid = Tombs.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = Tombs.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class EquipEventHandler {
     	
     	// Subscribe equip change event to apply luck mob effect
     	@SubscribeEvent
     	public static void tombraider$livingEquipChangeEvent(LivingEquipmentChangeEvent event) {
+    		System.out.println(event.getFrom() +" "+ event.getTo());
+    		
     		if (event.getSlot() == EquipmentSlot.HEAD) {
     			if (event.getTo().is(TombsItems.VINTAGE_SPECTACLES.get())) {
     				event.getEntity().addEffect(new MobEffectInstance(MobEffects.LUCK, -1, 0, false, false, true));

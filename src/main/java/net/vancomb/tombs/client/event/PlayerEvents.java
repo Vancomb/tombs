@@ -99,7 +99,7 @@ public abstract class PlayerEvents {
 			EpicFightCapabilities.<LivingEntity, LivingEntityPatch<LivingEntity>>getParameterizedEntityPatch(player, LivingEntity.class, LivingEntityPatch.class).ifPresent(entitypatch -> {
 				
 				// Cancel reload when playing an action animation
-				if (entitypatch.getEntityState().inaction()) {
+				if (!entitypatch.getEntityState().canUseItem()) {
 					return;
 				}
 				
