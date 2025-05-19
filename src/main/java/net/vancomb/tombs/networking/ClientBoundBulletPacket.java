@@ -2,7 +2,6 @@ package net.vancomb.tombs.networking;
 
 import java.util.function.Supplier;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 import net.vancomb.tombs.world.capabilities.BulletsCapability;
@@ -32,7 +31,7 @@ public class ClientBoundBulletPacket {
 	
 	public static void handle(ClientBoundBulletPacket msg, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			BulletsCapability.getBullets(Minecraft.getInstance().player).ifPresent(bulletsCapability -> {
+			BulletsCapability.getBullets(ctx.get().getSender()).ifPresent(bulletsCapability -> {
 				bulletsCapability.setRemainBullet(msg.remainBullet);
 			});
 		});
