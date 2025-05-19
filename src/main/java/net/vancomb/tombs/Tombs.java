@@ -1,17 +1,12 @@
 package net.vancomb.tombs;
 
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.vancomb.tombs.client.curios.layers.renderer.HeadRenderer;
+import net.vancomb.tombs.curios.CuriosCompat;
 import net.vancomb.tombs.networking.NetworkManager;
 import net.vancomb.tombs.registry.TombsCreativeTabs;
 import net.vancomb.tombs.registry.TombsEntityTypes;
@@ -19,8 +14,6 @@ import net.vancomb.tombs.registry.TombsItems;
 import net.vancomb.tombs.registry.TombsPaintingVariants;
 import net.vancomb.tombs.registry.TombsParticleTypes;
 import net.vancomb.tombs.registry.TombsSounds;
-import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
-import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
 @Mod(Tombs.MODID)
 public class Tombs {
@@ -53,15 +46,8 @@ public class Tombs {
         MinecraftForge.EVENT_BUS.register(this);
         
         if (ModList.get().isLoaded("curios")) {
-        	MinecraftForge.EVENT_BUS.<CurioChangeEvent>addListener((event) -> {
-        		if ("head".equals(event.getIdentifier())) {
-        			if (event.getTo().is(TombsItems.VINTAGE_SPECTACLES.get())) {
-        				event.getEntity().addEffect(new MobEffectInstance(MobEffects.LUCK, -1, 0, false, false, true));
-            		} else if (event.getFrom().is(TombsItems.VINTAGE_SPECTACLES.get())) {
-            			event.getEntity().removeEffect(MobEffects.LUCK);
-            		}
-        		}
-        	});
+        	CuriosCompat.modEventBus(modEventBus);
+        	CuriosCompat.forgeEventBus(MinecraftForge.EVENT_BUS);
         }
     }
 	
@@ -69,14 +55,4 @@ public class Tombs {
 		// Register packets for client-server communication
 		event.enqueueWork(NetworkManager::registerPackets);
 	}
-	
-	@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-	public static class ClientModEvents {
-		@SubscribeEvent
-		public static void onClientSetup(FMLClientSetupEvent event) {
-			if (ModList.get().isLoaded("curios")) {
-				CuriosRendererRegistry.register(TombsItems.VINTAGE_SPECTACLES.get(), HeadRenderer::new);
-			}
-		}
-    }
 }
