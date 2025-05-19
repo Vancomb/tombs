@@ -17,7 +17,7 @@ import net.vancomb.tombs.world.capabilities.BulletsCapability;
 @Mod.EventBusSubscriber(modid = Tombs.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LivingEntityEvents {
 	@SubscribeEvent
-	public static void tombraider$livingEquipChangeEvent(LivingEquipmentChangeEvent event) {
+	public static void tombs$livingEquipChangeEvent(LivingEquipmentChangeEvent event) {
 		
 		// Subscribe equip change event to correct max bullets
 		if (event.getEntity() instanceof ServerPlayer serverPlayer && (event.getFrom().is(TombsItems.HK_USP9_PISTOL.get()) || event.getTo().is(TombsItems.HK_USP9_PISTOL.get()))) {
@@ -28,6 +28,7 @@ public class LivingEntityEvents {
 				if (serverPlayer.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get())) pistols++;
 				if (serverPlayer.getOffhandItem().is(TombsItems.HK_USP9_PISTOL.get())) pistols++;
 				
+				pistols = Math.max(pistols, 1);
 				int maxBullets = BulletsCapability.getMaxBullets() * pistols;
 				
 				if (maxBullets < currentBullets) {
