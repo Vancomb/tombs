@@ -27,34 +27,63 @@ public class BulletsGui implements IGuiOverlay {
 		event.registerAbove(ResourceLocation.withDefaultNamespace("player_health"), "bullets", new BulletsGui());
 	}
 	
+	/**
+	 * The left-top coordination of bullets UI
+	 * If developer want to change the location of UI change this value
+	 */
 	private static final int UI_X_POSITION = 20;
 	private static final int UI_Y_POSITION = 20;
+	
+	// Color of character (a, r, g, b)
 	private static final int FONT_COLOR = FastColor.ARGB32.color(255, 255, 255, 255);
+	
+	// Background color (a, r, g, b)
 	private static final int BACKGROUND_COLOR = FastColor.ARGB32.color(100, 0, 0, 0);
 	
 	private void renderBulletsGui(GuiGraphics guiGraphics, Minecraft minecraft, Player player, BulletsCapability bullets) {
 		minecraft.getProfiler().push("bullets");
 		
+		// Count the pistols in hands to calculate max bullets
 		int pistols = 0;
 		if (player.getMainHandItem().is(TombsItems.HK_USP9_PISTOL.get())) pistols++;
 		if (player.getOffhandItem().is(TombsItems.HK_USP9_PISTOL.get())) pistols++;
 		
 		String remainBullet = String.format("%d / %d", bullets.getRemainBullets(), BulletsCapability.getMaxBullets() * pistols);
+		
+		// Draw bullets string
 		guiGraphics.drawString(minecraft.font, remainBullet, UI_X_POSITION + 10, UI_Y_POSITION + 11, FONT_COLOR);
 		
 		if (pistols == 1) {
+			// Save the current transform
 			guiGraphics.pose().pushPose();
+			
+			// Then apply the translation to avoid wrong transform
+			guiGraphics.pose().translate(UI_X_POSITION + 60, UI_Y_POSITION + 3, 0);
+			// Apply the rotation first
 			guiGraphics.pose().mulPose(Axis.ZP.rotationDegrees(30.0F));
-			guiGraphics.renderItem(TombsItems.HK_USP9_PISTOL.get().getDefaultInstance(), UI_X_POSITION + 60, UI_Y_POSITION - 40);
+			
+			// Render pistol
+			guiGraphics.renderItem(TombsItems.HK_USP9_PISTOL.get().getDefaultInstance(), 0, 0);
+			
+			// Revert to the last transform
 			guiGraphics.pose().popPose();
 		} else if (pistols == 2) {
 			guiGraphics.pose().pushPose();
+			
+			// Then apply the translation to avoid wrong transform
+			guiGraphics.pose().translate(UI_X_POSITION + 60, UI_Y_POSITION + 1, 0);
+			// Apply the rotation first
 			guiGraphics.pose().mulPose(Axis.ZP.rotationDegrees(30.0F));
-			guiGraphics.renderItem(TombsItems.HK_USP9_PISTOL.get().getDefaultInstance(), UI_X_POSITION + 60, UI_Y_POSITION - 40);
-			guiGraphics.renderItem(TombsItems.HK_USP9_PISTOL.get().getDefaultInstance(), UI_X_POSITION + 65, UI_Y_POSITION - 40);
+			
+			// Render dual pistols
+			guiGraphics.renderItem(TombsItems.HK_USP9_PISTOL.get().getDefaultInstance(), 0, 0);
+			guiGraphics.renderItem(TombsItems.HK_USP9_PISTOL.get().getDefaultInstance(), 6, 2);
+			
+			// Revert to the last transform
 			guiGraphics.pose().popPose();
 		}
 		
+		// Draw background
 		guiGraphics.fill(UI_X_POSITION, UI_Y_POSITION, UI_X_POSITION + 84, UI_Y_POSITION + 30, BACKGROUND_COLOR);
 		
 		minecraft.getProfiler().pop();
