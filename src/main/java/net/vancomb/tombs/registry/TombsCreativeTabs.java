@@ -16,7 +16,7 @@ public abstract class TombsCreativeTabs {
     		// A creative tab order
             .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             // A title of creative tab when hovered
-            .title(Component.translatable("creative_tab.tombraider"))
+            .title(Component.translatable("creative_tab.tombs"))
             // An item shown on the creative tab
             .icon(() -> TombsItems.HK_USP9_PISTOL.get().getDefaultInstance())
             // A list of items that is displayed on the tab
