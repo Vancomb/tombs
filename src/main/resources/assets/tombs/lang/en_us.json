@@ -16,10 +16,11 @@
 	"key.tombs": "Tombs",
 	"key.tombs.reload": "Reload",
 	
-	"painting.tombs.caves.title": "Caves",
-	"painting.tombs.caves.author": "Vancomb",
-	"painting.tombs.the_crofts.title": "The Crofts",
-	"painting.tombs.the_crofts.author": "Vancomb",
+
+	"painting.tombs.avalon.title": "Avalon",
+	"painting.tombs.avalon.author": "Vancomb",
+
+
 	
 	"eof": "eof"
 }
